@@ -27,21 +27,18 @@ private string connectionString;
 public class AddressManager
 {
     private DatabaseManager dbManager;
-    private string connectionString;
 
-    public AddressManager(string connectionString)
+    public AddressManager()
     {
-        this.connectionString = connectionString;
         this.dbManager = new DatabaseManager();
     }
 
-    public void CreateNewAddress(Adress address)
+    public void CreateNewAddress(Addres address)
     {
         using (SqliteConnection connection = dbManager.OpenConnection())
         {
-            string query = "INSERT INTO Addresses (id, Street, Number, Code, City, Country) VALUES (@Street, @Number, @Code, @City, @Country)";
+            string query = "INSERT INTO Addresses (Street, Number, Code, City, Country) VALUES (@Street, @Number, @Code, @City, @Country)";
             SqliteCommand command = new SqliteCommand(query, connection);
-            command.Parameters.AddWithValue("@id", address.getId());
             command.Parameters.AddWithValue("@Street", address.getStreet());
             command.Parameters.AddWithValue("@Number", address.getNumber());
             command.Parameters.AddWithValue("@Code", address.getCode());
@@ -49,5 +46,33 @@ public class AddressManager
             command.Parameters.AddWithValue("@Country", address.getCountry());
             command.ExecuteNonQuery();
         }
+    }
+
+     public List<AddresDTO> GetAddresses()
+    {
+        List<AddresDTO> addresses = new List<AddresDTO>();
+
+        using (SqliteConnection connection = dbManager.OpenConnection())
+        {
+            string query = "SELECT * FROM Adress";
+            SqliteCommand command = new SqliteCommand(query, connection);
+            using (SqliteDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    int id = reader.GetInt16(0);
+                    string street = reader.GetString(1);
+                    int number = reader.GetInt16(2);
+                    string code = reader.GetString(3);
+                    string city = reader.GetString(4);
+                    string country = reader.GetString(5);
+
+                    AddresDTO addres = new AddresDTO(id, street, number, code, city, country);
+                    addresses.Add(addres);
+                }
+            }
+        }
+
+        return addresses;
     }
 }

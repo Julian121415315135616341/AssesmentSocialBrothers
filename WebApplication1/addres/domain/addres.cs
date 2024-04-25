@@ -1,7 +1,7 @@
 using System;
 
 
-public class Adress{
+public class Addres{
     private int id;
 
     private String street;
@@ -12,7 +12,7 @@ public class Adress{
 
 
 
-    public Adress(String street, int number, String code, String city, String country){
+    public Addres(String street, int number, String code, String city, String country){
         this.street = street;
         this.number = number;
         this.code = code;
