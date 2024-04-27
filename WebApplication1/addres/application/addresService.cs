@@ -25,6 +25,16 @@ public class AddresService
         throw new SqliteException(ex.Message, ex.ErrorCode); 
     }
 }
+public AddresDTO changeAddres(NewAddressDTO newAddressDTO, int id){
+    try {
+        AddresDTO addresDTO = new AddresDTO(id, newAddressDTO.Street, newAddressDTO.Number, newAddressDTO.Code, newAddressDTO.City, newAddressDTO.Country);
+        return addressManager.changeAddres(addresDTO);
+    }
+    catch (SqliteException ex){
+        Console.WriteLine("SQLite Exception occurred: " + ex.Message);
+        throw new SqliteException(ex.Message, ex.ErrorCode);
+    }
+}
 
 public List<AddresDTO> getAddresses(){
     return addressManager.GetAddresses();

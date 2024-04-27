@@ -78,6 +78,32 @@ public class AddressManager
         return addresses;
     }
 
+    public AddresDTO changeAddres(AddresDTO updatedAddress)
+{
+    using (SqliteConnection connection = dbManager.OpenConnection())
+    {
+        string query = "UPDATE Addres SET Street = @Street, Number = @Number, Code = @Code, City = @City, Country = @Country WHERE Id = @Id";
+        SqliteCommand command = new SqliteCommand(query, connection);
+        command.Parameters.AddWithValue("@Street", updatedAddress.Street);
+        command.Parameters.AddWithValue("@Number", updatedAddress.Number);
+        command.Parameters.AddWithValue("@Code", updatedAddress.Code);
+        command.Parameters.AddWithValue("@City", updatedAddress.City);
+        command.Parameters.AddWithValue("@Country", updatedAddress.Country);
+        command.Parameters.AddWithValue("@Id", updatedAddress.Id);
+
+        int rowsAffected = command.ExecuteNonQuery();
+
+        if (rowsAffected > 0)
+        {
+            return updatedAddress;
+        }
+        else
+        {
+            return null;
+        }
+    }
+}
+
 
     public AddresDTO GetAddres(int id)
 {

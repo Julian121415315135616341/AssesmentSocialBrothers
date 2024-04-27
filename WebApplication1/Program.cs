@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,10 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 // Register services
 builder.Services.AddTransient<AddresService>(); 
 
 var app = builder.Build();
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -19,7 +23,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapGet("/addresses", (AddresService addresService) => {
-    return Results.Accepted(addresService.getAddresses().ToString());
+    return new JsonResult(addresService.getAddresses());
 })
 .WithName("GetAddresses")
 .WithOpenApi(); 
@@ -28,14 +32,29 @@ app.MapGet("/addresses/{id}", (AddresService addresService, int id) => {
     var address = addresService.getAddres(id);
     if (address != null)
     {
-        return Results.Ok(address.ToString());
+        return new JsonResult(address);
     }
     else
     {
-        return Results.NotFound($"Address with ID {id} not found.");
+        return new JsonResult($"Address with ID {id} not found."); 
     }
 })
 .WithName("GetAddressById")
+.WithOpenApi();
+
+app.MapPut("/addresses/{id}", async (HttpContext httpContext, int id) => {
+        var addresService = httpContext.RequestServices.GetRequiredService<AddresService>();
+        var newAddres = await httpContext.Request.ReadFromJsonAsync<NewAddressDTO>();
+
+        AddresDTO adresDTO = addresService.changeAddres(newAddres, id);
+        if (adresDTO != null){
+            return new JsonResult(adresDTO);
+        }
+        else {
+            return new JsonResult("Addres not found");
+        }
+})
+.WithName("ChangeAddres")
 .WithOpenApi();
 
 app.MapPost("/addresses", async (HttpContext httpContext) => {
@@ -47,11 +66,11 @@ app.MapPost("/addresses", async (HttpContext httpContext) => {
     {
         AddresDTO createdAddres = addresService.CreateAddres(newAddres.Street, newAddres.Number, newAddres.Code, newAddres.City, newAddres.Country);
 
-        return createdAddres.ToString();
+        return new JsonResult(createdAddres);
     }
     else
     {
-        return "Invalid JSON body";
+        return new JsonResult("Invalid JSON body"); 
     }
 })
 .WithName("CreateAddress")
