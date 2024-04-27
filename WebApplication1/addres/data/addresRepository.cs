@@ -1,4 +1,6 @@
 using System;
+using System.ComponentModel;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.Sqlite;
 
 public class DatabaseManager{
@@ -37,7 +39,7 @@ public class AddressManager
     {
         using (SqliteConnection connection = dbManager.OpenConnection())
         {
-            string query = "INSERT INTO Addresses (Street, Number, Code, City, Country) VALUES (@Street, @Number, @Code, @City, @Country)";
+            string query = "INSERT INTO Addres (Street, Number, Code, City, Country) VALUES (@Street, @Number, @Code, @City, @Country)";
             SqliteCommand command = new SqliteCommand(query, connection);
             command.Parameters.AddWithValue("@Street", address.getStreet());
             command.Parameters.AddWithValue("@Number", address.getNumber());
@@ -54,7 +56,7 @@ public class AddressManager
 
         using (SqliteConnection connection = dbManager.OpenConnection())
         {
-            string query = "SELECT * FROM Adress";
+            string query = "SELECT * FROM Addres";
             SqliteCommand command = new SqliteCommand(query, connection);
             using (SqliteDataReader reader = command.ExecuteReader())
             {
@@ -75,4 +77,31 @@ public class AddressManager
 
         return addresses;
     }
+
+
+    public AddresDTO GetAddres(int id)
+{
+    using (SqliteConnection connection = dbManager.OpenConnection())
+    {
+        string query = "SELECT * FROM Addres WHERE id = @id";
+        SqliteCommand command = new SqliteCommand(query, connection);
+        command.Parameters.AddWithValue("@id", id);
+
+        using (SqliteDataReader reader = command.ExecuteReader())
+        {
+            if (reader.Read())
+            {
+                int addressId = reader.GetInt16(0);
+                string street = reader.GetString(1);
+                int number = reader.GetInt16(2);
+                string code = reader.GetString(3);
+                string city = reader.GetString(4);
+                string country = reader.GetString(5);
+
+                return new AddresDTO(addressId, street, number, code, city, country);
+            }
+        }
+    }
+    return null;   
+     }
 }

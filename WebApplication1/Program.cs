@@ -6,11 +6,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Register services
-builder.Services.AddTransient<AddresService>(); // Assuming AddressService is your service class
+builder.Services.AddTransient<AddresService>(); 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -19,10 +18,44 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/addresses", (AddresService addressService) => {
-    return addressService.getAddresses();
+app.MapGet("/addresses", (AddresService addresService) => {
+    return Results.Accepted(addresService.getAddresses().ToString());
 })
 .WithName("GetAddresses")
-.WithOpenApi(); // Assuming AddressService has a method GetAddresses()
+.WithOpenApi(); 
+
+app.MapGet("/addresses/{id}", (AddresService addresService, int id) => {
+    var address = addresService.getAddres(id);
+    if (address != null)
+    {
+        return Results.Ok(address.ToString());
+    }
+    else
+    {
+        return Results.NotFound($"Address with ID {id} not found.");
+    }
+})
+.WithName("GetAddressById")
+.WithOpenApi();
+
+app.MapPost("/addresses", async (HttpContext httpContext) => {
+
+    var addresService = httpContext.RequestServices.GetRequiredService<AddresService>();
+    var newAddres = await httpContext.Request.ReadFromJsonAsync<NewAddressDTO>();
+
+    if (newAddres != null)
+    {
+        AddresDTO createdAddres = addresService.CreateAddres(newAddres.Street, newAddres.Number, newAddres.Code, newAddres.City, newAddres.Country);
+
+        return createdAddres.ToString();
+    }
+    else
+    {
+        return "Invalid JSON body";
+    }
+})
+.WithName("CreateAddress")
+.WithOpenApi();
+
 
 app.Run();

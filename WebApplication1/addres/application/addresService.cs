@@ -10,11 +10,12 @@ public class AddresService
     }
 
 
-   public AddresDTO CreateAddres(string street, int number, string code, string city, string country)
-{
-    Addres addres = new Addres(street, number, code, city, country);
+   public AddresDTO CreateAddres(string street, int number, string code, string city, string country){
+    
     try
     {
+        int id = addressManager.GetAddresses().Count()+1;
+        Addres addres = new Addres(id, street, number, code, city, country);
         addressManager.CreateNewAddress(addres);
         return new AddresDTO(addres);
     }
@@ -27,6 +28,10 @@ public class AddresService
 
 public List<AddresDTO> getAddresses(){
     return addressManager.GetAddresses();
+}
+
+public AddresDTO getAddres(int id){
+    return addressManager.GetAddres(id);
 }
 
     
