@@ -44,5 +44,9 @@ public AddresDTO getAddres(int id){
     return addressManager.GetAddres(id);
 }
 
+public Boolean deleteAddres(int id){
+    return addressManager.deleteAddres(id);
+}
+
     
 }

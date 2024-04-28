@@ -102,8 +102,27 @@ public class AddressManager
             return null;
         }
     }
-}
 
+}
+    public Boolean deleteAddres(int id) {
+    using (SqliteConnection connection = dbManager.OpenConnection())
+    {
+        string query = "DELETE FROM Addres WHERE Id = @Id";
+        SqliteCommand command = new SqliteCommand(query, connection);
+        command.Parameters.AddWithValue("@Id", id);
+
+        int rowsAffected = command.ExecuteNonQuery();
+
+        if (rowsAffected > 0)
+            {
+            return true;            
+            }
+        else
+            {
+            return false;
+            }
+        }
+    }
 
     public AddresDTO GetAddres(int id)
 {

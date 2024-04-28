@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,11 +23,39 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/addresses", (AddresService addresService) => {
-    return new JsonResult(addresService.getAddresses());
+app.MapGet("/addresses", (AddresService addresService, [FromQuery] string search = null, [FromQuery] string sortField = null, [FromQuery] string sortOrder = null) => {
+    var addresses = addresService.getAddresses();
+
+    if (!string.IsNullOrEmpty(search))
+    {
+        addresses = addresses.Where(a =>
+            a.Street.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+            a.City.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+            a.Code.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+            a.Country.Contains(search, StringComparison.OrdinalIgnoreCase)
+        ).ToList();
+    }
+    
+    if (!string.IsNullOrEmpty(sortField) && !string.IsNullOrEmpty(sortOrder))
+    {
+        var prop = typeof(AddresDTO).GetProperty(sortField, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+        if (prop != null)
+        {
+            if (sortOrder.ToLower() == "asc")
+            {
+                addresses = addresses.OrderBy(a => prop.GetValue(a, null)).ToList();
+            }
+            else
+            {
+                addresses = addresses.OrderByDescending(a => prop.GetValue(a, null)).ToList();
+            }
+        }
+    }
+
+    return new JsonResult(addresses);
 })
 .WithName("GetAddresses")
-.WithOpenApi(); 
+.WithOpenApi();
 
 app.MapGet("/addresses/{id}", (AddresService addresService, int id) => {
     var address = addresService.getAddres(id);
@@ -46,8 +75,8 @@ app.MapPut("/addresses/{id}", async (HttpContext httpContext, int id) => {
         var addresService = httpContext.RequestServices.GetRequiredService<AddresService>();
         var newAddres = await httpContext.Request.ReadFromJsonAsync<NewAddressDTO>();
 
-        AddresDTO adresDTO = addresService.changeAddres(newAddres, id);
-        if (adresDTO != null){
+        if (newAddres != null && newAddres.City != null && newAddres.Code != null && newAddres.Country != null && newAddres.Street != null && newAddres.Number != null && newAddres.Number != 0){
+                    AddresDTO adresDTO = addresService.changeAddres(newAddres, id);
             return new JsonResult(adresDTO);
         }
         else {
@@ -61,8 +90,7 @@ app.MapPost("/addresses", async (HttpContext httpContext) => {
 
     var addresService = httpContext.RequestServices.GetRequiredService<AddresService>();
     var newAddres = await httpContext.Request.ReadFromJsonAsync<NewAddressDTO>();
-
-    if (newAddres != null)
+    if (newAddres != null && newAddres.City != null && newAddres.Code != null && newAddres.Country != null && newAddres.Street != null && newAddres.Number != null && newAddres.Number != 0)
     {
         AddresDTO createdAddres = addresService.CreateAddres(newAddres.Street, newAddres.Number, newAddres.Code, newAddres.City, newAddres.Country);
 
@@ -74,6 +102,20 @@ app.MapPost("/addresses", async (HttpContext httpContext) => {
     }
 })
 .WithName("CreateAddress")
+.WithOpenApi();
+
+
+app.MapDelete("/addresses/{id}", async (HttpContext httpContext, int id) => {
+
+    var addresService = httpContext.RequestServices.GetRequiredService<AddresService>();
+    if (addresService.deleteAddres(id)){
+        return new JsonResult("Addres succesfully deleted");
+    }
+    else {
+        return new JsonResult("Addres not found");
+    }
+})
+.WithName("DeleteAddres")
 .WithOpenApi();
 
 
