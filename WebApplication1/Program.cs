@@ -118,5 +118,20 @@ app.MapDelete("/addresses/{id}", async (HttpContext httpContext, int id) => {
 .WithName("DeleteAddres")
 .WithOpenApi();
 
+app.MapGet("/addresses/{idA}/{idB}", async (HttpContext httpContext, int idA, int idB) => {
+
+    var addresService = httpContext.RequestServices.GetRequiredService<AddresService>();
+    double? distance = await addresService.calculateDistanceBetweenAddresses(idA, idB);
+    if (distance != null){
+        return new JsonResult("Distance: " + distance + "km");
+    }
+    else {
+        return new JsonResult("Invalid Addresses");
+    }
+
+})
+.WithName("GetDistanceBetweenAddresses")
+.WithOpenApi();
+
 
 app.Run();
