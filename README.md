@@ -10,4 +10,4 @@
 - One aspect that I'm very happy with is the sorting and ordering of the addresses because I think I am doing it using a very easy and changeable method.
 - Another point I'm pleased with is the structure of the project; everything is well separated into layers, and communication between the layers is clear and clean.
 - I am currently handling the usage of the distancematrix API within my addresservice, there should be a seperate class for the usage of the API, I did not have the time to implement this so for now it is being done within the addresservice
-- A second issue with the API is that the API key is currently not hidden, if I were not using a public free API with limited calls per month i would have to hide the key, but i did not take that into account when starting on the API functionality.
+- A second issue with the API is that the API key is currently not hidden, if I were not using a public free API with limited calls per month i would have to hide the key, but I did not take that into account when starting on the API functionality.
