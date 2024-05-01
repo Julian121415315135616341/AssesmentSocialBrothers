@@ -55,7 +55,10 @@ app.MapGet("/addresses", (AddresService addresService, [FromQuery] string search
     return new JsonResult(addresses);
 })
 .WithName("GetAddresses")
-.WithOpenApi();
+.WithOpenApi()
+.WithDescription("Get a list of addresses with optional filtering and sorting.");
+
+
 
 app.MapGet("/addresses/{id}", (AddresService addresService, int id) => {
     var address = addresService.getAddres(id);
@@ -69,7 +72,9 @@ app.MapGet("/addresses/{id}", (AddresService addresService, int id) => {
     }
 })
 .WithName("GetAddressById")
-.WithOpenApi();
+.WithOpenApi()
+.WithDescription("Get an addres based off of id.");
+
 
 app.MapPut("/addresses/{id}", async (HttpContext httpContext, int id) => {
         var addresService = httpContext.RequestServices.GetRequiredService<AddresService>();
@@ -84,7 +89,9 @@ app.MapPut("/addresses/{id}", async (HttpContext httpContext, int id) => {
         }
 })
 .WithName("ChangeAddres")
-.WithOpenApi();
+.WithOpenApi()
+.WithDescription("Change an addres based off of id.");
+
 
 app.MapPost("/addresses", async (HttpContext httpContext) => {
 
@@ -102,7 +109,8 @@ app.MapPost("/addresses", async (HttpContext httpContext) => {
     }
 })
 .WithName("CreateAddress")
-.WithOpenApi();
+.WithOpenApi()
+.WithDescription("Create a new addres.");
 
 
 app.MapDelete("/addresses/{id}", async (HttpContext httpContext, int id) => {
@@ -116,7 +124,9 @@ app.MapDelete("/addresses/{id}", async (HttpContext httpContext, int id) => {
     }
 })
 .WithName("DeleteAddres")
-.WithOpenApi();
+.WithOpenApi()
+.WithDescription("Delete an addres based off of id.");
+
 
 app.MapGet("/addresses/{idA}/{idB}", async (HttpContext httpContext, int idA, int idB) => {
 
@@ -131,7 +141,9 @@ app.MapGet("/addresses/{idA}/{idB}", async (HttpContext httpContext, int idA, in
 
 })
 .WithName("GetDistanceBetweenAddresses")
-.WithOpenApi();
+.WithOpenApi()
+.WithDescription("Determine distance between 2 different addresses, using their id.");
+
 
 
 app.Run();
