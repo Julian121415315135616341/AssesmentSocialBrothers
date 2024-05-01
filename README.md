@@ -9,4 +9,4 @@
 ## Reflection
 - One aspect that I'm very happy with is the sorting and ordering of the addresses because I think I am doing it using a very easy and changeable method.
 - Another point I'm pleased with is the structure of the project; everything is well separated into layers, and communication between the layers is clear and clean.
-- I am currently handling the usage of distancematrix api within my addresservice, there should be a seperate class for the usage of the api, i did not have the time to implement this so for now it is being done within the addresservice
+- I am currently handling the usage of the distancematrix API within my addresservice, there should be a seperate class for the usage of the API, I did not have the time to implement this so for now it is being done within the addresservice
