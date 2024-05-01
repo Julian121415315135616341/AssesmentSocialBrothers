@@ -1,6 +1,6 @@
 # AssesmentSocialBrothers
 
-##Installation
+## Installation
 - 1: Make sure you have the .NET sdk installed. (https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 - 2: Install SQLite. (https://www.sqlite.org/download.html)
 - 3: Clone or download the project.
