@@ -9,5 +9,4 @@
 ## Reflection
 - One aspect that I'm very happy with is the sorting and ordering of the addresses because I think I am doing it using a very easy and changeable method.
 - Another point I'm pleased with is the structure of the project; everything is well separated into layers, and communication between the layers is clear and clean.
-- One aspect I'm less happy about is the structure; I ended up putting all of my endpoints within the program.cs file. I tried to use a separate controller file, but I did not manage to finish that in time.
-- Another thing that I did not manage to do was to include JSON in my Swagger requests. In order to still be able to test the requests, I have included a Postman collection.
+- I am currently handling the usage of distancematrix api within my addresservice, there should be a seperate class for the usage of the api, i did not have the time to implement this so for now it is being done within the addresservice
