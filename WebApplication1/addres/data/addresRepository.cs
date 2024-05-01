@@ -9,7 +9,7 @@ private string connectionString;
 
     public DatabaseManager()
     {
-        this.connectionString = @"Data Source=C:\School\Jaar 2\SocialBrotherAssesment\AssesmentSocialBrothers\WebApplication1\database.db";
+        this.connectionString = @"Data Source=database.db";
 ;
     }
 
