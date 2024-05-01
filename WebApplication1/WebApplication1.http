@@ -1,6 +1,49 @@
 @WebApplication1_HostAddress = http://localhost:5196
 
-GET {{WebApplication1_HostAddress}}/
-Accept: application/json
+### Get Addresses
+GET {{WebApplication1_HostAddress}}/addresses
+
+###
+
+### Get Address by ID
+GET {{WebApplication1_HostAddress}}/addresses/123
+
+###
+
+### Change Address by ID
+PUT {{WebApplication1_HostAddress}}/addresses/123
+Content-Type: application/json
+
+{
+  "Street": "Street",
+  "Number": 1,
+  "Code": "1234ab",
+  "City": "City",
+  "Country": "Country"
+}
+
+###
+
+### Create New Address
+POST {{WebApplication1_HostAddress}}/addresses
+Content-Type: application/json
+
+{
+  "Street": "Street",
+  "Number": 1,
+  "Code": "1234ab",
+  "City": "City",
+  "Country": "Country"
+}
+
+###
+
+### Delete Address by ID
+DELETE {{WebApplication1_HostAddress}}/addresses/123
+
+###
+
+### Get Distance Between Addresses
+GET {{WebApplication1_HostAddress}}/addresses/1/2
 
 ###
